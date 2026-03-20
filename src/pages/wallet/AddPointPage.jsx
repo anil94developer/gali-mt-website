@@ -127,30 +127,32 @@ function AddPointPage({ navigate }) {
 
         <section className="addp-history-card">
           <h3>Wallet History</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Sr No</th>
-                <th>Pay Mode</th>
-                <th>Date</th>
-                <th>Points</th>
-                <th>Closing Balance</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sampleWalletRows.map((row) => (
-                <tr key={row.id}>
-                  <td>{row.id}</td>
-                  <td>{row.mode}</td>
-                  <td>{row.date}</td>
-                  <td>{row.points}</td>
-                  <td>{row.closing}</td>
-                  <td className="success">{row.status}</td>
+          <div className="addp-history-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Sr No</th>
+                  <th>Pay Mode</th>
+                  <th>Date</th>
+                  <th>Points</th>
+                  <th>Closing Balance</th>
+                  <th>Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {sampleWalletRows.map((row) => (
+                  <tr key={row.id}>
+                    <td>{row.id}</td>
+                    <td>{row.mode}</td>
+                    <td>{row.date}</td>
+                    <td>{row.points}</td>
+                    <td>{row.closing}</td>
+                    <td className="success">{row.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
       </main>
 

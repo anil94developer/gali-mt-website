@@ -182,7 +182,13 @@
 
 .addp-history-card table {
   width: 100%;
+  min-width: 700px;
   border-collapse: collapse;
+}
+
+.addp-history-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .addp-history-card th,
@@ -233,25 +239,118 @@
 }
 
 @media (max-width: 768px) {
+  .addp-topbar {
+    height: 68px;
+    grid-template-columns: 34px 22px 1fr auto;
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  .add-point-page {
+    padding-top: 68px;
+  }
+
+  .addp-logo {
+    width: 52px;
+    height: 52px;
+  }
+
+  .addp-balance-card {
+    gap: 4px;
+    padding: 3px 6px;
+  }
+
+  .addp-balance-text small {
+    font-size: 10px;
+  }
+
   .addp-balance-text strong {
-    font-size: 24px;
+    font-size: 18px;
+  }
+
+  .addp-coin {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .addp-win-strip {
+    font-size: 13px;
+    padding: 6px;
+  }
+
+  .addp-content {
+    padding: 6px 0 0;
+  }
+
+  .addp-card,
+  .addp-history-card {
+    margin: 0 4px 10px;
   }
 
   .addp-tab {
+    font-size: 13px;
+    height: 38px;
+  }
+
+  .addp-input-wrap input {
+    font-size: 14px;
+  }
+
+  .addp-submit-btn {
     font-size: 14px;
     height: 40px;
   }
 
-  .addp-input-wrap input {
-    font-size: 16px;
-  }
-
-  .addp-submit-btn {
-    font-size: 16px;
-    height: 42px;
-  }
-
   .addp-history-card h3 {
-    font-size: 14px;
+    font-size: 13px;
+    padding: 10px 8px;
+  }
+
+  .addp-history-card table {
+    min-width: 620px;
+  }
+
+  .addp-history-card th,
+  .addp-history-card td {
+    font-size: 11px;
+    padding: 7px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .addp-topbar {
+    grid-template-columns: 30px 20px 1fr auto;
+    gap: 6px;
+  }
+
+  .addp-icon-btn {
+    font-size: 22px;
+  }
+
+  .addp-bell {
+    font-size: 18px;
+  }
+
+  .addp-balance-text strong {
+    font-size: 16px;
+  }
+
+  .addp-tab {
+    font-size: 12px;
+    height: 36px;
+  }
+
+  .addp-input-wrap {
+    min-height: 42px;
+  }
+
+  .addp-input-icon {
+    font-size: 15px;
+    padding: 0 8px;
+  }
+
+  .addp-history-card table {
+    min-width: 560px;
   }
 }
