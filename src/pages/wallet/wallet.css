@@ -220,7 +220,13 @@
 
 .history-card table {
   width: 100%;
+  min-width: 620px;
   border-collapse: collapse;
+}
+
+.history-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .history-card th,
@@ -309,5 +315,15 @@
 
   .history-card h3 {
     font-size: 14px;
+  }
+
+  .history-card table {
+    min-width: 560px;
+  }
+
+  .history-card th,
+  .history-card td {
+    font-size: 11px;
+    padding: 7px 8px;
   }
 }

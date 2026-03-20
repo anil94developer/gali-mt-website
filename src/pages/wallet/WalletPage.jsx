@@ -290,51 +290,53 @@ function WalletPage({ navigate }) {
 
         <section className="history-card">
           <h3>{activeTab === 'add' ? 'Wallet History' : 'Withdraw History'}</h3>
-          {activeTab === 'add' ? (
-            <table>
-              <thead>
-                <tr>
-                  <th>Sr No</th>
-                  <th>Pay Mode</th>
-                  <th>Date</th>
-                  <th>Points</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sampleWalletRows.map((row) => (
-                  <tr key={row.id}>
-                    <td>{row.id}</td>
-                    <td>{row.mode}</td>
-                    <td>{row.date}</td>
-                    <td>{row.points}</td>
+          <div className="history-table-wrap">
+            {activeTab === 'add' ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sr No</th>
+                    <th>Pay Mode</th>
+                    <th>Date</th>
+                    <th>Points</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <table>
-              <thead>
-                <tr>
-                  <th>S No</th>
-                  <th>Date</th>
-                  <th>Points</th>
-                  <th>Closing Balance</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sampleWithdrawRows.map((row) => (
-                  <tr key={row.id}>
-                    <td>{row.id}</td>
-                    <td>{row.date}</td>
-                    <td>{row.points}</td>
-                    <td>{row.closing}</td>
-                    <td className="success">{row.status}</td>
+                </thead>
+                <tbody>
+                  {sampleWalletRows.map((row) => (
+                    <tr key={row.id}>
+                      <td>{row.id}</td>
+                      <td>{row.mode}</td>
+                      <td>{row.date}</td>
+                      <td>{row.points}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <table>
+                <thead>
+                  <tr>
+                    <th>S No</th>
+                    <th>Date</th>
+                    <th>Points</th>
+                    <th>Closing Balance</th>
+                    <th>Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+                </thead>
+                <tbody>
+                  {sampleWithdrawRows.map((row) => (
+                    <tr key={row.id}>
+                      <td>{row.id}</td>
+                      <td>{row.date}</td>
+                      <td>{row.points}</td>
+                      <td>{row.closing}</td>
+                      <td className="success">{row.status}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </section>
       </main>
 
