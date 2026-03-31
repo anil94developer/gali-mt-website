@@ -5,6 +5,8 @@ import { ROUTE_PATHS } from '../routes'
 import './auth.css'
 
 const initialLoginForm = { mobileNum: '', pss: '' }
+const APK_DOWNLOAD_URL =
+  'https://24x7good.com/apk/gd-matka.apk'
 
 function LoginPage({ navigate }) {
   const [form, setForm] = useState(initialLoginForm)
@@ -83,10 +85,18 @@ function LoginPage({ navigate }) {
         </p>
 
         <div className="install-row">
-          <button type="button" className="install-btn">
+          <button
+            type="button"
+            className="install-btn"
+            onClick={() => window.open(APK_DOWNLOAD_URL, '_blank')}
+          >
             Install Application 1
           </button>
-          <button type="button" className="install-btn">
+          <button
+            type="button"
+            className="install-btn"
+            onClick={() => window.open(APK_DOWNLOAD_URL, '_blank')}
+          >
             Install Application 2
           </button>
         </div>

@@ -1,5 +1,5 @@
 export const APP_CONFIG = {
-  baseUrl: import.meta.env.VITE_API_BASE_URL || 'https://api.playonlineds.net/api/users',
+  baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://loaclhost:30000/api/users',
   appId: import.meta.env.VITE_APP_ID || 'com.dubaiking',
   devId: import.meta.env.VITE_DEV_ID || 'undefined',
   paymentGatewayUrl:
@@ -17,6 +17,7 @@ export const API_ENDPOINTS = {
   marketList: '/get-market-list',
   batPlace: '/bat-place',
   deductWithdrawWeb: '/deduct-withdrawweb',
+  deductWithdrawUpiWeb: '/deduct-withdrawUpiweb',
   appManager: '/app-manager',
   manageCommission: '/manage-commission',
   userRefferList: '/user-refferlist',
@@ -24,4 +25,6 @@ export const API_ENDPOINTS = {
   userCredit: '/user-credit',
   userProfileUpdate: '/user-profile-update',
   helpNumber: '/POM_help_number',
+  walletReport: '/wallet-report',
+  withdrawHistory: '/withdrawl-history',
 }

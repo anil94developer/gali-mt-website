@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getSession } from '../../services/sessionService'
-import { getAppManager } from '../../services/walletService'
+import { getAppManager, getWalletReport } from '../../services/walletService'
 import { getUserCredit } from '../../services/homeService'
 import SideDrawer from '../common/SideDrawer'
 import MessageDialog from '../common/MessageDialog'
@@ -10,19 +10,13 @@ import { APP_CONFIG } from '../../config/config'
 import AppIcon from '../common/AppIcon'
 import './addPoint.css'
 
-const sampleWalletRows = [
-  { id: 1, mode: 'Game Bet DISAWAR', date: '18/3/2026, 11:44:56 pm', points: 10, closing: 15, status: 'Success' },
-  { id: 2, mode: 'Game Bet DISAWAR', date: '18/3/2026, 11:42:25 pm', points: 20, closing: 25, status: 'Success' },
-  { id: 3, mode: 'Game Bet DISAWAR', date: '18/3/2026, 11:42:12 pm', points: 40, closing: 45, status: 'Success' },
-  { id: 4, mode: 'Game Bet DISAWAR', date: '18/3/2026, 11:41:08 pm', points: 10, closing: 85, status: 'Success' },
-]
-
 function AddPointPage({ navigate }) {
   const [session] = useState(() => getSession())
   const [amount, setAmount] = useState('')
   const [credit, setCredit] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [walletRows, setWalletRows] = useState([])
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [dialog, setDialog] = useState({ open: false, type: 'success', title: '', message: '' })
 
@@ -36,11 +30,13 @@ function AddPointPage({ navigate }) {
       setLoading(true)
       setError('')
       try {
-        const [, creditValue] = await Promise.all([
+        const [, creditValue, walletHistory] = await Promise.all([
           getAppManager(session.userId),
           getUserCredit(session.userId),
+          getWalletReport(session.userId),
         ])
         setCredit(Number(creditValue || 0))
+        setWalletRows(walletHistory)
       } catch (apiError) {
         setError(apiError instanceof Error ? apiError.message : 'Unable to load wallet data.')
       } finally {
@@ -140,16 +136,21 @@ function AddPointPage({ navigate }) {
                 </tr>
               </thead>
               <tbody>
-                {sampleWalletRows.map((row) => (
-                  <tr key={row.id}>
-                    <td>{row.id}</td>
-                    <td>{row.mode}</td>
-                    <td>{row.date}</td>
-                    <td>{row.points}</td>
-                    <td>{row.closing}</td>
-                    <td className="success">{row.status}</td>
+                {walletRows.map((row, index) => (
+                  <tr key={row.transaction_id || `${row.datetime || 'dt'}-${index}`}>
+                    <td>{index + 1}</td>
+                    <td>{row.market ? `${row.remark || '--'} ${row.market}` : row.remark || '--'}</td>
+                    <td>{row.datetime || '--'}</td>
+                    <td>{row.amount ?? '--'}</td>
+                    <td>{row.closing_balance ?? '--'}</td>
+                    <td className="success">{row.status || '--'}</td>
                   </tr>
                 ))}
+                {walletRows.length === 0 ? (
+                  <tr>
+                    <td colSpan={6}>No wallet history found.</td>
+                  </tr>
+                ) : null}
               </tbody>
             </table>
           </div>

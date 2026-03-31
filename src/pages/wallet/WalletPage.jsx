@@ -3,24 +3,17 @@ import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getUserCredit } from '../../services/homeService'
 import { getSession } from '../../services/sessionService'
-import { deductWithdrawWeb, getAppManager } from '../../services/walletService'
+import {
+  deductWithdrawWeb,
+  deductWithdrawUpiWeb,
+  getAppManager,
+  getWalletReport,
+  getWithdrawHistory,
+} from '../../services/walletService'
 import SideDrawer from '../common/SideDrawer'
 import MessageDialog from '../common/MessageDialog'
 import AppIcon from '../common/AppIcon'
 import './wallet.css'
-
-const sampleWalletRows = [
-  { id: 1, mode: 'Deposit By Admin', date: '7/3/2026, 7:06:42 am', points: 100 },
-  { id: 2, mode: 'Game Bet MATKANIGHT', date: '6/1/2026, 7:11:09 pm', points: 10 },
-  { id: 3, mode: 'Game Bet VIPMATKA', date: '6/1/2026, 7:09:58 pm', points: 1 },
-  { id: 4, mode: 'Deposit By Admin', date: '6/1/2026, 7:09:41 pm', points: 100 },
-]
-
-const sampleWithdrawRows = [
-  { id: 1, date: '6/1/2026, 10:40:09 pm', points: 5, closing: 0, status: 'Success' },
-  { id: 2, date: '6/1/2026, 10:40:09 pm', points: 5, closing: 0, status: 'Success' },
-  { id: 3, date: '6/1/2026, 10:39:58 pm', points: 25, closing: 5, status: 'Success' },
-]
 
 function WalletPage({ navigate }) {
   const [session] = useState(() => getSession())
@@ -36,6 +29,8 @@ function WalletPage({ navigate }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [managerData, setManagerData] = useState(null)
+  const [walletRows, setWalletRows] = useState([])
+  const [withdrawRows, setWithdrawRows] = useState([])
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [withdrawing, setWithdrawing] = useState(false)
   const [dialog, setDialog] = useState({ open: false, type: 'success', title: '', message: '' })
@@ -51,13 +46,17 @@ function WalletPage({ navigate }) {
       setError('')
 
       try {
-        const [managerResponse, creditValue] = await Promise.all([
+        const [managerResponse, creditValue, walletHistory, withdrawHistory] = await Promise.all([
           getAppManager(session.userId),
           getUserCredit(session.userId),
+          getWalletReport(session.userId),
+          getWithdrawHistory(session.userId),
         ])
 
         setManagerData(managerResponse?.data || null)
         setCredit(Number(creditValue || 0))
+        setWalletRows(walletHistory)
+        setWithdrawRows(withdrawHistory)
       } catch (apiError) {
         setError(apiError instanceof Error ? apiError.message : 'Unable to fetch wallet details.')
       } finally {
@@ -127,17 +126,30 @@ function WalletPage({ navigate }) {
 
     setWithdrawing(true)
     try {
-      const result = await deductWithdrawWeb({
-        userId: session.userId,
-        amount,
-        accountNumber: paymentMode === 'bank' ? accountNumber : '',
-        ifscCode: paymentMode === 'bank' ? ifscCode : '',
-        bankName: '',
-        accountHolderName: '',
-        upiId: paymentMode === 'upi' ? upiId : '',
-      })
+      const result =
+        paymentMode === 'upi'
+          ? await deductWithdrawUpiWeb({
+              userId: session.userId,
+              amount,
+              upiId,
+            })
+          : await deductWithdrawWeb({
+              userId: session.userId,
+              amount,
+              accountNumber,
+              ifscCode,
+              bankName: '',
+              accountHolderName: '',
+              upiId: '',
+            })
 
       setCredit(Number(result.credit || credit))
+      const [walletHistory, withdrawHistory] = await Promise.all([
+        getWalletReport(session.userId),
+        getWithdrawHistory(session.userId),
+      ])
+      setWalletRows(walletHistory)
+      setWithdrawRows(withdrawHistory)
       setDialog({
         open: true,
         type: 'success',
@@ -302,14 +314,19 @@ function WalletPage({ navigate }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {sampleWalletRows.map((row) => (
-                    <tr key={row.id}>
-                      <td>{row.id}</td>
-                      <td>{row.mode}</td>
-                      <td>{row.date}</td>
-                      <td>{row.points}</td>
+                  {walletRows.map((row, index) => (
+                    <tr key={row.transaction_id || `${row.datetime || 'dt'}-${index}`}>
+                      <td>{index + 1}</td>
+                      <td>{row.market ? `${row.remark || '--'} ${row.market}` : row.remark || '--'}</td>
+                      <td>{row.datetime || '--'}</td>
+                      <td>{row.amount ?? '--'}</td>
                     </tr>
                   ))}
+                  {walletRows.length === 0 ? (
+                    <tr>
+                      <td colSpan={4}>No wallet history found.</td>
+                    </tr>
+                  ) : null}
                 </tbody>
               </table>
             ) : (
@@ -324,15 +341,20 @@ function WalletPage({ navigate }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {sampleWithdrawRows.map((row) => (
-                    <tr key={row.id}>
-                      <td>{row.id}</td>
-                      <td>{row.date}</td>
-                      <td>{row.points}</td>
-                      <td>{row.closing}</td>
-                      <td className="success">{row.status}</td>
+                  {withdrawRows.map((row, index) => (
+                    <tr key={row._id || row.transaction_id || `${row.date || 'd'}-${index}`}>
+                      <td>{index + 1}</td>
+                      <td>{row.date || '--'}</td>
+                      <td>{row.tr_value ?? '--'}</td>
+                      <td>{row.tr_value_updated ?? row.win_bet_amt_not_use ?? '--'}</td>
+                      <td className="success">{row.tr_status || '--'}</td>
                     </tr>
                   ))}
+                  {withdrawRows.length === 0 ? (
+                    <tr>
+                      <td colSpan={5}>No withdraw history found.</td>
+                    </tr>
+                  ) : null}
                 </tbody>
               </table>
             )}
