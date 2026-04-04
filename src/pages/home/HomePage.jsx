@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Card, CardContent } from '@mui/material'
 import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getAppNotice, getHelpNumber, getHomeDashboard, getUserCredit, getUserProfile } from '../../services/homeService'
@@ -111,7 +112,8 @@ function HomePage({ navigate }) {
         {!loading &&
           !error &&
           markets.map((item) => (
-            <section key={item.market_id} className="market-card">
+            <Card key={item.market_id} className="market-card" elevation={2}>
+              <CardContent className="market-card-content">
               <h3>{item.market_name}</h3>
               <p className="result-time">
                 Result At <strong>{item.resultTime || '--'}</strong>
@@ -124,7 +126,8 @@ function HomePage({ navigate }) {
                 <span>{item.market_result_previous_day || '--'}</span>
                 <span>{item.market_result || '--'}</span>
               </div>
-            </section>
+              </CardContent>
+            </Card>
           ))}
       </main>
 

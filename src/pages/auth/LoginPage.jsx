@@ -7,6 +7,7 @@ import './auth.css'
 const initialLoginForm = { mobileNum: '', pss: '' }
 const APK_DOWNLOAD_URL =
   'https://24x7good.com/apk/gd-matka.apk'
+const HELPLINE_NUMBER = '+91 9257191421'
 
 function LoginPage({ navigate }) {
   const [form, setForm] = useState(initialLoginForm)
@@ -102,7 +103,15 @@ function LoginPage({ navigate }) {
         </div>
 
         <p className="helpline">
-          Helpline Number: <span className="wa-icon">🟢</span> +91 9257191421
+          Helpline Number:{' '}
+          <a
+            href={`https://wa.me/${HELPLINE_NUMBER.replace(/[^\d]/g, '')}`}
+            target="_blank"
+            rel="noreferrer"
+            className="helpline-link"
+          >
+            <span className="wa-icon">🟢</span> {HELPLINE_NUMBER}
+          </a>
         </p>
       </form>
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Card, CardContent } from '@mui/material'
 import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getMarketList } from '../../services/playService'
@@ -56,11 +57,11 @@ function PlayPage({ navigate }) {
     <div className="play-page">
       <header className="play-topbar">
         <button type="button" className="play-icon-btn" onClick={() => setDrawerOpen(true)}>
-          ☰
+          <AppIcon name="menu" />
         </button>
-        <span className="play-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          🔔
-        </span>
+        <button type="button" className="play-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
+          <AppIcon name="notifications" />
+        </button>
         <img src={logo} alt="POD" className="play-logo" />
         <div className="play-balance-card">
           <div className="play-coin">₹</div>
@@ -82,24 +83,29 @@ function PlayPage({ navigate }) {
             {markets.map((market) => {
               const canPlay = String(market.is_play) === '1'
               return (
-                <article key={market.id} className="game-card">
-                  <div className="clock-box">⏰</div>
-                  <div className="game-info">
-                    <h3>{market.name}</h3>
-                    <p>
-                      {market.open_time} - {market.time}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    className={`game-action ${canPlay ? 'play' : 'timeout'}`}
-                    onClick={() => openMarketPlay(market)}
-                  >
-                    {canPlay ? 'Play Games' : 'Time Out'}
-                  </button>
-                </article>
+                <Card key={market.id} className="game-card" elevation={2}>
+                  <CardContent className="game-card-content">
+                    <div className="clock-box">⏰</div>
+                    <div className="game-info">
+                      <h3>{market.name}</h3>
+                      <p>
+                        {market.open_time} - {market.time}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className={`game-action ${canPlay ? 'play' : 'timeout'}`}
+                      onClick={() => openMarketPlay(market)}
+                    >
+                      {canPlay ? 'Play Games' : 'Time Out'}
+                    </button>
+                  </CardContent>
+                </Card>
               )
             })}
+            {markets.length === 0 ? (
+              <div className="play-empty-card">No games available right now.</div>
+            ) : null}
           </div>
         ) : null}
       </main>

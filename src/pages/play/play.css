@@ -1,13 +1,13 @@
 .play-page {
   min-height: 100vh;
-  background: #dcdcdc;
+  background: linear-gradient(180deg, #eef4ff 0%, #e5efff 100%);
   padding-top: 76px;
-  padding-bottom: 72px;
+  padding-bottom: 88px;
 }
 
 .play-topbar {
   height: 76px;
-  background: #241a20;
+  background: #0b5ed7;
   color: #fff;
   display: grid;
   grid-template-columns: 42px 24px 1fr auto;
@@ -26,11 +26,26 @@
   border: none;
   background: transparent;
   color: #fff;
-  font-size: 28px;
+  display: grid;
+  place-items: center;
+}
+
+.play-icon-btn .app-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .play-bell {
-  font-size: 24px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  display: grid;
+  place-items: center;
+}
+
+.play-bell .app-icon {
+  width: 22px;
+  height: 22px;
 }
 
 .play-logo {
@@ -44,7 +59,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.65);
   border-radius: 6px;
   padding: 4px 8px;
 }
@@ -53,8 +68,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #d8a81f;
-  color: #2b1f25;
+  background: #dbeafe;
+  color: #0b5ed7;
   display: grid;
   place-items: center;
   font-weight: 700;
@@ -72,48 +87,53 @@
 
 .play-balance-text strong {
   font-size: 28px;
-  color: #eed82e;
+  color: #ffffff;
 }
 
 .all-games-title {
-  margin: 12px auto 8px;
+  margin: 12px auto 10px;
   width: calc(100% - 10px);
-  background: #2a2026;
-  border-radius: 14px;
+  background: #084298;
+  border-radius: 12px;
   color: #fff;
   text-align: center;
-  padding: 6px 0;
-  font-size: 33px;
+  padding: 10px 0;
+  font-size: 20px;
+  letter-spacing: 0.4px;
 }
 
 .play-content {
-  padding: 0 0 10px;
+  padding: 0 2px 10px;
 }
 
 .games-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 8px;
+  gap: 10px;
 }
 
 .game-card {
-  background: #2a2026;
-  border: 1px solid #234796;
-  border-radius: 10px;
-  min-height: 88px;
+  background: #ffffff;
+  border: 1px solid #c7dcff;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(11, 94, 215, 0.08);
+  margin: 0 4px;
+}
+
+.game-card-content {
+  min-height: 94px;
   display: grid;
   grid-template-columns: 56px 1fr auto;
   align-items: center;
   gap: 8px;
-  padding: 6px;
-  margin: 0 4px;
+  padding: 6px !important;
 }
 
 .clock-box {
   width: 56px;
   height: 56px;
-  border-radius: 8px;
-  background: #adb3b5;
+  border-radius: 10px;
+  background: #eaf2ff;
   display: grid;
   place-items: center;
   font-size: 30px;
@@ -121,34 +141,57 @@
 
 .game-info h3 {
   margin: 0;
-  color: #fff;
-  font-size: 17px;
+  color: #0c2a57;
+  font-size: 18px;
+  line-height: 1.2;
 }
 
 .game-info p {
   margin: 2px 0 0;
-  color: #fff;
-  font-size: 13px;
+  color: #2c4f88;
+  font-size: 12px;
   font-weight: 600;
 }
 
 .game-action {
   border: none;
   border-radius: 8px;
-  min-width: 104px;
-  height: 42px;
-  font-size: 16px;
+  min-width: 100px;
+  height: 40px;
+  font-size: 14px;
   font-weight: 700;
   color: #fff;
   margin-right: 2px;
 }
 
 .game-action.timeout {
-  background: #65686b;
+  background: #8fa4c8;
 }
 
 .game-action.play {
-  background: #c8af76;
+  background: #0b5ed7;
+}
+
+.state-text {
+  margin: 8px 10px;
+  font-size: 13px;
+  color: #0c2a57;
+}
+
+.state-text.error {
+  color: #b42318;
+}
+
+.play-empty-card {
+  margin: 0 4px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px dashed #9dc3ff;
+  background: #ffffff;
+  color: #2c4f88;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .bottom-nav {
@@ -183,5 +226,28 @@
 
   .play-balance-text strong {
     font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-card-content {
+    grid-template-columns: 50px 1fr auto;
+    gap: 6px;
+  }
+
+  .clock-box {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .game-info h3 {
+    font-size: 15px;
+  }
+
+  .game-action {
+    min-width: 86px;
+    font-size: 12px;
+    height: 36px;
   }
 }

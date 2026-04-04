@@ -1,10 +1,10 @@
 .home-page {
   min-height: 100vh;
-  background: #2a1f25;
-  color: #fff;
+  background: #eaf2ff;
+  color: #0c2a57;
   position: relative;
   padding-top: 78px;
-  padding-bottom: 72px;
+  padding-bottom: 98px;
 }
 
 .home-topbar {
@@ -97,7 +97,7 @@
 }
 
 .home-content {
-  padding: 0 4px;
+  padding: 0 4px 16px;
 }
 
 .state-text {
@@ -112,15 +112,15 @@
 
 .hero-result-card {
   margin: 10px 6px 10px;
-  border: 2px solid #a88336;
+  border: 1px solid #c7dcff;
   border-radius: 6px;
-  background: #2a2026;
+  background: #ffffff;
   overflow: hidden;
 }
 
 .hero-date {
-  background: linear-gradient(90deg, #9d8444, #d5c08a);
-  color: #f5f5f5;
+  background: linear-gradient(90deg, #0b5ed7, #2f80ed);
+  color: #ffffff;
   text-align: center;
   font-size: 22px;
   font-weight: 500;
@@ -129,16 +129,16 @@
 
 .hero-body {
   margin: 0 6px;
-  background: #efefef;
+  background: #f5f9ff;
   text-align: center;
-  color: #111;
-  border-top: 1px dashed #c6b07a;
-  border-bottom: 1px dashed #c6b07a;
+  color: #0c2a57;
+  border-top: 1px dashed #9dc3ff;
+  border-bottom: 1px dashed #9dc3ff;
 }
 
-.hero-body p {
+.hero-body h4 {
   margin: 0;
-  font-size: 40px;
+  font-size: 30px;
   font-weight: 700;
   line-height: 1.1;
 }
@@ -147,10 +147,10 @@
   margin: 12px auto 10px;
   width: min(620px, calc(100% - 22px));
   display: block;
-  border: 2px dashed #f0f0f0;
+  border: 1px dashed #9dc3ff;
   border-radius: 8px;
-  background: linear-gradient(90deg, #b8a672, #6d5638);
-  color: #f8f8f8;
+  background: linear-gradient(90deg, #0b5ed7, #2f80ed);
+  color: #ffffff;
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -158,9 +158,9 @@
 }
 
 .live-strip {
-  background: #2a2026;
-  border-top: 2px solid #b78c35;
-  color: #f2f2f2;
+  background: #084298;
+  border-top: 1px solid #2f80ed;
+  color: #ffffff;
   text-align: center;
   font-size: 24px;
   font-weight: 700;
@@ -168,24 +168,30 @@
 }
 
 .market-card {
-  background: #b8ab7d;
-  margin: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  background: #ffffff !important;
+  border: 1px solid #c7dcff !important;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(11, 94, 215, 0.08);
+  margin: 0 2px 10px;
   text-align: center;
   padding-bottom: 8px;
+}
+
+.market-card-content {
+  padding: 0 0 8px !important;
 }
 
 .market-card h3 {
   margin: 0;
   padding-top: 8px;
   font-size: 32px;
-  color: #f1f1f1;
+  color: #0c2a57;
 }
 
 .result-time {
   margin: 4px 0;
-  background: #ececec;
-  color: #1f1f1f;
+  background: #f5f9ff;
+  color: #0c2a57;
   font-size: 16px;
   font-weight: 700;
 }
@@ -199,8 +205,8 @@
 }
 
 .result-head span {
-  background: #ececec;
-  color: #1f1f1f;
+  background: #eaf2ff;
+  color: #0b5ed7;
   border-radius: 4px;
   font-size: 16px;
   font-weight: 700;
@@ -213,7 +219,7 @@
   gap: 8px;
   width: min(340px, calc(100% - 18px));
   margin: 0 auto;
-  color: #f7f7f7;
+  color: #084298;
   font-size: 32px;
   font-weight: 600;
 }
@@ -228,6 +234,7 @@
   grid-template-columns: repeat(4, 1fr);
   background: #241a20;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 30;
 }
 
 .nav-item {
@@ -334,8 +341,8 @@
     font-size: 18px;
   }
 
-  .hero-body p {
-    font-size: 32px;
+  .hero-body h4 {
+    font-size: 22px;
   }
 
   .share-earn-btn {

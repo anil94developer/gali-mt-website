@@ -6,6 +6,7 @@ import { placeBet } from '../../services/playService'
 import { getUserCredit } from '../../services/homeService'
 import SideDrawer from '../common/SideDrawer'
 import MessageDialog from '../common/MessageDialog'
+import AppIcon from '../common/AppIcon'
 import './marketPlay.css'
 
 const jodiNumbers = Array.from({ length: 100 }, (_, index) => String(index).padStart(2, '0'))
@@ -215,11 +216,11 @@ function MarketPlayPage({ navigate }) {
     <div className="market-play-page">
       <header className="market-topbar">
         <button type="button" className="market-icon-btn" onClick={() => setDrawerOpen(true)}>
-          ☰
+          <AppIcon name="menu" />
         </button>
-        <span className="market-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          🔔
-        </span>
+        <button type="button" className="market-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
+          <AppIcon name="notifications" />
+        </button>
         <img src={logo} alt="POD" className="market-logo" />
         <div className="market-balance-card">
           <div className="market-coin">₹</div>

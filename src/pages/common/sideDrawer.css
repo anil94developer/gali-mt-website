@@ -1,7 +1,7 @@
 .sd-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(11, 94, 215, 0.22);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s;
@@ -15,12 +15,20 @@
 
 .sd-drawer {
   width: min(360px, 86vw);
-  height: 100%;
-  background: #2a1f25;
+  height: 100vh;
+  background: #eaf2ff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
   transform: translateX(-100%);
   transition: transform 0.2s;
   overflow-y: auto;
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  border-right: 1px solid #c7dcff;
 }
 
 .sd-drawer.open {
@@ -43,21 +51,21 @@
 .sd-close {
   border: none;
   background: transparent;
-  color: #fff;
+  color: #0b5ed7;
   font-size: 28px;
   cursor: pointer;
 }
 
 .sd-profile {
   padding: 0 12px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid #c7dcff;
 }
 
 .sd-profile p {
   margin: 4px 0;
   font-size: 14px;
   font-weight: 700;
-  color: #fff;
+  color: #0c2a57;
 }
 
 .sd-menu {
@@ -74,8 +82,9 @@
   text-align: left;
   border: none;
   border-radius: 999px;
-  background: #efefef;
-  color: #161616;
+  background: #ffffff;
+  color: #0b5ed7;
+  border: 1px solid #c7dcff;
   font-size: 15px;
   font-weight: 700;
   padding: 11px 14px;
@@ -88,5 +97,6 @@
 }
 
 .sd-item.logout {
-  background: #ffe5e5;
+  background: #dbeafe;
+  color: #084298;
 }

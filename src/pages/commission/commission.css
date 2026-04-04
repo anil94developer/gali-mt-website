@@ -71,7 +71,7 @@
 }
 
 .commission-balance-text strong {
-  font-size: 28px;
+  font-size: 14px;
   color: #eed82e;
 }
 
@@ -149,7 +149,7 @@
 
 @media (max-width: 768px) {
   .commission-balance-text strong {
-    font-size: 24px;
+    font-size: 18px;
   }
 
   .commission-title {

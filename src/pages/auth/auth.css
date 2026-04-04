@@ -151,6 +151,16 @@
   font-weight: 600;
 }
 
+.helpline-link {
+  color: #0b5ed7;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.helpline-link:hover {
+  text-decoration: underline;
+}
+
 .wa-icon {
   font-size: 17px;
   vertical-align: middle;

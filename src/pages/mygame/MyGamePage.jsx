@@ -78,11 +78,11 @@ function MyGamePage({ navigate, pageTitle = 'History', initialTab = 'pending' })
     <div className="history-page">
       <header className="history-topbar">
         <button type="button" className="history-icon-btn" onClick={() => setDrawerOpen(true)}>
-          ☰
+          <AppIcon name="menu" />
         </button>
-        <span className="history-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          🔔
-        </span>
+        <button type="button" className="history-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
+          <AppIcon name="notifications" />
+        </button>
         <img src={logo} alt="POD" className="history-logo" />
         <div className="history-balance-card">
           <div className="history-coin">₹</div>
