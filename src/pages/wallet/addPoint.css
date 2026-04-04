@@ -171,6 +171,29 @@
   font-weight: 600;
 }
 
+.addp-gateway-wrap {
+  margin: 6px 0 10px;
+}
+
+.addp-gateway-wrap label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+.addp-gateway-wrap select {
+  width: 100%;
+  box-sizing: border-box;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #bdbdbd;
+  background: #fff;
+  padding: 0 10px;
+  font-size: 14px;
+}
+
 .addp-history-card h3 {
   margin: -8px -8px 0;
   background: #2a2026;
@@ -300,6 +323,11 @@
   .addp-submit-btn {
     font-size: 14px;
     height: 40px;
+  }
+
+  .addp-gateway-wrap select {
+    height: 36px;
+    font-size: 13px;
   }
 
   .addp-history-card h3 {

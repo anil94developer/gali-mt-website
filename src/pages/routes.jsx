@@ -13,6 +13,7 @@ import HistoryPage from './history/HistoryPage'
 import ResultHistoryPage from './history/ResultHistoryPage'
 import TermsPage from './terms/TermsPage'
 import ReferPage from './refer/ReferPage'
+import ReferSharePage from './refer/ReferSharePage'
 import NotificationPage from './notification/NotificationPage'
 import { getSession } from '../services/sessionService'
 
@@ -31,6 +32,7 @@ export const ROUTE_PATHS = {
   resultHistory: '/result-history',
   terms: '/terms-and-condition',
   refer: '/refer-list',
+  referShare: '/refer-earn',
   notification: '/notification',
 }
 
@@ -49,6 +51,7 @@ const routeMap = {
   [ROUTE_PATHS.resultHistory]: ResultHistoryPage,
   [ROUTE_PATHS.terms]: TermsPage,
   [ROUTE_PATHS.refer]: ReferPage,
+  [ROUTE_PATHS.referShare]: ReferSharePage,
   [ROUTE_PATHS.notification]: NotificationPage,
 }
 
@@ -76,6 +79,7 @@ export function getRouteElement(pathname, navigate) {
       normalizedPath === ROUTE_PATHS.resultHistory ||
       normalizedPath === ROUTE_PATHS.terms ||
       normalizedPath === ROUTE_PATHS.refer ||
+      normalizedPath === ROUTE_PATHS.referShare ||
       normalizedPath === ROUTE_PATHS.notification)
   ) {
     return <LoginPage navigate={navigate} />
@@ -138,6 +142,10 @@ export function getRouteElement(pathname, navigate) {
 
   if (normalizedPath === ROUTE_PATHS.refer) {
     return <ReferPage navigate={navigate} />
+  }
+
+  if (normalizedPath === ROUTE_PATHS.referShare) {
+    return <ReferSharePage navigate={navigate} />
   }
 
   if (normalizedPath === ROUTE_PATHS.notification) {

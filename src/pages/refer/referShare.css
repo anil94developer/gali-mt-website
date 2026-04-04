@@ -1,0 +1,141 @@
+.refer-share-page {
+  min-height: 100vh;
+  background: #ededed;
+  padding-top: 76px;
+  padding-bottom: 72px;
+}
+
+.refer-share-topbar {
+  height: 76px;
+  background: #241a20;
+  color: #fff;
+  display: grid;
+  grid-template-columns: 42px 24px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 8;
+}
+
+.refer-share-icon-btn,
+.refer-share-bell {
+  border: none;
+  background: transparent;
+  color: #fff;
+  display: grid;
+  place-items: center;
+}
+
+.refer-share-icon-btn .app-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.refer-share-bell .app-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.refer-share-logo {
+  width: 62px;
+  height: 62px;
+  object-fit: cover;
+  justify-self: center;
+}
+
+.refer-share-balance-card {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+.refer-share-coin {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #d8a81f;
+  color: #2b1f25;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+.refer-share-balance-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.refer-share-balance-text small {
+  font-size: 12px;
+}
+
+.refer-share-balance-text strong {
+  font-size: 34px;
+  color: #eed82e;
+}
+
+.refer-share-content {
+  padding: 18px 16px;
+}
+
+.refer-share-content h2 {
+  margin: 6px 0 12px;
+  text-align: center;
+  font-size: 44px;
+  color: #222;
+}
+
+.refer-share-content p {
+  margin: 0 0 14px;
+  font-size: 42px;
+  line-height: 1.55;
+  color: #5c5f68;
+  font-weight: 600;
+}
+
+.refer-share-content p:last-of-type {
+  color: #24272d;
+  font-weight: 700;
+}
+
+.refer-share-btn {
+  width: 100%;
+  max-width: 900px;
+  margin: 8px auto 0;
+  display: block;
+  height: 56px;
+  border-radius: 8px;
+  border: 1px solid #d0576d;
+  background: #f4f4f4;
+  color: #383838;
+  font-size: 31px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .refer-share-content h2 {
+    font-size: 20px;
+  }
+
+  .refer-share-content p {
+    font-size: 14px;
+  }
+
+  .refer-share-btn {
+    font-size: 16px;
+    height: 46px;
+  }
+
+  .refer-share-balance-text strong {
+    font-size: 24px;
+  }
+}

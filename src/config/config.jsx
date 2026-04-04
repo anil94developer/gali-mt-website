@@ -4,7 +4,7 @@ export const APP_CONFIG = {
   devId: import.meta.env.VITE_DEV_ID || 'undefined',
   paymentGatewayUrl:
     import.meta.env.VITE_PAYMENT_GATEWAY_URL ||
-    'https://playonlineds.net/Admin/public/payment-getway',
+    'https://admin.24x7good.com/public/payment-getway',
 }
 
 export const API_ENDPOINTS = {

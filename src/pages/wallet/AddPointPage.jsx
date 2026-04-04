@@ -13,6 +13,7 @@ import './addPoint.css'
 function AddPointPage({ navigate }) {
   const [session] = useState(() => getSession())
   const [amount, setAmount] = useState('')
+  const [gatewayKey, setGatewayKey] = useState('utr')
   const [credit, setCredit] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -62,7 +63,7 @@ function AddPointPage({ navigate }) {
     const userid = encodeURIComponent(String(session?.userId || ''))
     const contact = encodeURIComponent(session?.mobileNum || '')
     const finalAmount = encodeURIComponent(String(amount))
-    const getaway = 'razorpay'
+    const getaway = gatewayKey
     const url = `${APP_CONFIG.paymentGatewayUrl}?name=${name}&userid=${userid}&amount=${finalAmount}&contact=${contact}&getaway=${getaway}`
     window.location.href = url
   }
@@ -115,6 +116,20 @@ function AddPointPage({ navigate }) {
               placeholder="Enter Amount"
             />
           </div>
+
+          {/* <div className="addp-gateway-wrap">
+            <label htmlFor="gatewayKey">Select Gateway</label>
+            <select
+              id="gatewayKey"
+              value={gatewayKey}
+              onChange={(event) => setGatewayKey(event.target.value)}
+            >
+              <option value="utr">UTR</option>
+              <option value="online">Online</option>
+              <option value="menual">Menual</option>
+              <option value="payinfintech">Payinfintech</option>
+            </select>
+          </div> */}
 
           <button type="button" className="addp-submit-btn" onClick={onAddPoints}>
             Add Points

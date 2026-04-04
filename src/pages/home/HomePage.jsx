@@ -99,7 +99,7 @@ function HomePage({ navigate }) {
             <button
               type="button"
               className="share-earn-btn"
-              onClick={() => navigate(ROUTE_PATHS.refer)}
+              onClick={() => navigate(ROUTE_PATHS.referShare)}
             >
               शेयर 🔗 SHARE &amp; EARN
             </button>
