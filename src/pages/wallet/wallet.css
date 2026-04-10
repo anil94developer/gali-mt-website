@@ -170,6 +170,29 @@
   background: linear-gradient(90deg, #2f80ed, #0b5ed7);
 }
 
+.wallet-gateway-wrap {
+  margin-top: 8px;
+}
+
+.wallet-gateway-wrap label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0c2a57;
+  margin-bottom: 4px;
+}
+
+.wallet-gateway-wrap select {
+  width: 100%;
+  box-sizing: border-box;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #9dc3ff;
+  background: #fff;
+  padding: 0 10px;
+  font-size: 14px;
+}
+
 .bank-tabs {
   margin-top: 8px;
   display: grid;
@@ -284,6 +307,7 @@
   .wallet-tab {
     font-size: 14px;
     height: 40px;
+     
   }
 
   .input-box input {
@@ -293,10 +317,16 @@
   .wallet-submit {
     font-size: 16px;
     height: 42px;
+    margin-top:10px
   }
 
   .wallet-note {
     font-size: 11px;
+  }
+
+  .wallet-gateway-wrap select {
+    height: 36px;
+    font-size: 13px;
   }
 
   .bank-tabs button {

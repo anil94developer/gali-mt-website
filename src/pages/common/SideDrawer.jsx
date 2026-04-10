@@ -23,7 +23,7 @@ function SideDrawer({
   name = 'User',
   mobile = '--',
   refCode = '--',
-  helpNumber = '+91 9257191421',
+  helpNumber = '',
 }) {
   const [session] = useState(() => getSession())
   const [profileData, setProfileData] = useState(null)

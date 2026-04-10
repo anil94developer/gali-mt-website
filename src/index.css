@@ -1,7 +1,9 @@
 html,
 body {
-  height: 100%;
+  min-height: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -16,7 +18,9 @@ body {
 
 #root {
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .app-icon {
@@ -67,9 +71,13 @@ p {
   background: var(--theme-blue-soft) !important;
   color: var(--theme-text) !important;
   min-height: 100vh !important;
+  min-height: 100dvh !important;
   height: auto !important;
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
 
 .result-history-page {

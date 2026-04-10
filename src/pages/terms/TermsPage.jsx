@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getUserCredit } from '../../services/homeService'
 import { getSession } from '../../services/sessionService'
 import SideDrawer from '../common/SideDrawer'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './terms.css'
 
 const termsLines = [
@@ -49,22 +49,12 @@ function TermsPage({ navigate }) {
 
   return (
     <div className="terms-page">
-      <header className="terms-topbar">
-        <button type="button" className="terms-icon-btn" onClick={() => setDrawerOpen(true)}>
-          ☰
-        </button>
-        <span className="terms-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          🔔
-        </span>
-        <img src={logo} alt="POD" className="terms-logo" />
-        <div className="terms-balance-card">
-          <div className="terms-coin">₹</div>
-          <div className="terms-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <main className="terms-content">
         {termsLines.map((line, index) =>

@@ -143,6 +143,25 @@
   cursor: pointer;
 }
 
+.install-center {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.install-center .install-btn {
+  width: min(320px, 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.apk-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
 .helpline {
   text-align: center;
   color: #232026;

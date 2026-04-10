@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import logo from '../../assets/hero.png'
 import { getUserCredit, getUserProfile } from '../../services/homeService'
 import { getSession } from '../../services/sessionService'
 import { ROUTE_PATHS } from '../routes'
 import SideDrawer from '../common/SideDrawer'
 import AppIcon from '../common/AppIcon'
 import MessageDialog from '../common/MessageDialog'
+import Header from '../common/Header'
 import './referShare.css'
 
 function ReferSharePage({ navigate }) {
@@ -76,26 +76,12 @@ function ReferSharePage({ navigate }) {
 
   return (
     <div className="refer-share-page">
-      <header className="refer-share-topbar">
-        <button type="button" className="refer-share-icon-btn" onClick={() => setDrawerOpen(true)}>
-          <AppIcon name="menu" />
-        </button>
-        <button
-          type="button"
-          className="refer-share-bell"
-          onClick={() => navigate(ROUTE_PATHS.notification)}
-        >
-          <AppIcon name="notifications" />
-        </button>
-        <img src={logo} alt="POD" className="refer-share-logo" />
-        <div className="refer-share-balance-card">
-          <div className="refer-share-coin">₹</div>
-          <div className="refer-share-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <main className="refer-share-content">
         <h2>Refer &amp; Earn</h2>

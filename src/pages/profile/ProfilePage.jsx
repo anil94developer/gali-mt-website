@@ -6,6 +6,7 @@ import { getSession } from '../../services/sessionService'
 import { updateUserProfile } from '../../services/profileService'
 import SideDrawer from '../common/SideDrawer'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './profile.css'
 
 function ProfilePage({ navigate }) {
@@ -58,22 +59,12 @@ function ProfilePage({ navigate }) {
 
   return (
     <div className="profile-page">
-      <header className="profile-topbar">
-        <button type="button" className="profile-icon-btn" onClick={() => setDrawerOpen(true)}>
-          ☰
-        </button>
-        <span className="profile-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          🔔
-        </span>
-        <img src={logo} alt="POD" className="profile-logo" />
-        <div className="profile-balance-card">
-          <div className="profile-coin">₹</div>
-          <div className="profile-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <section className="profile-hero">
         <img src={logo} alt="POD" className="profile-hero-logo" />

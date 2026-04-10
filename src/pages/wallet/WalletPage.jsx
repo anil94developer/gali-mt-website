@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import logo from '../../assets/hero.png'
+import { APP_CONFIG } from '../../config/config'
 import { ROUTE_PATHS } from '../routes'
 import { getUserCredit } from '../../services/homeService'
 import { getSession } from '../../services/sessionService'
 import {
-  deductWithdrawWeb,
   deductWithdrawUpiWeb,
+  deductWithdrawWeb,
   getAppManager,
   getWalletReport,
   getWithdrawHistory,
@@ -13,13 +13,15 @@ import {
 import SideDrawer from '../common/SideDrawer'
 import MessageDialog from '../common/MessageDialog'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './wallet.css'
 
 function WalletPage({ navigate }) {
   const [session] = useState(() => getSession())
-  const [activeTab, setActiveTab] = useState('withdraw')
+  const [activeTab, setActiveTab] = useState('add')
   const [amount, setAmount] = useState('')
-  const [paymentMode, setPaymentMode] = useState('bank')
+  const [gatewayKey, setGatewayKey] = useState('utr')
+  const [paymentMode, setPaymentMode] = useState('upi')
   const [upiId, setUpiId] = useState('')
   const [accountNumber, setAccountNumber] = useState('')
   const [confirmAccountNumber, setConfirmAccountNumber] = useState('')
@@ -44,7 +46,6 @@ function WalletPage({ navigate }) {
     const loadData = async () => {
       setLoading(true)
       setError('')
-
       try {
         const [managerResponse, creditValue, walletHistory, withdrawHistory] = await Promise.all([
           getAppManager(session.userId),
@@ -72,6 +73,26 @@ function WalletPage({ navigate }) {
     const close = managerData?.withdraw_close_time || '13:30'
     return `Withdrawal Time ${open} to ${close}`
   }, [managerData?.withdraw_close_time, managerData?.withdraw_open_time])
+
+  const onAddPoints = () => {
+    if (!amount || Number(amount) <= 0) {
+      setDialog({
+        open: true,
+        type: 'error',
+        title: 'Error',
+        message: 'Please enter valid amount.',
+      })
+      return
+    }
+
+    const name = encodeURIComponent(session?.name || 'Test')
+    const userid = encodeURIComponent(String(session?.userId || ''))
+    const contact = encodeURIComponent(session?.mobileNum || '')
+    const finalAmount = encodeURIComponent(String(amount))
+    const getaway = gatewayKey
+    const url = `${APP_CONFIG.paymentGatewayUrl}?name=${name}&userid=${userid}&amount=${finalAmount}&contact=${contact}&getaway=${getaway}`
+    window.location.href = url
+  }
 
   const handleWithdraw = async () => {
     if (!amount || Number(amount) <= 0) {
@@ -144,12 +165,14 @@ function WalletPage({ navigate }) {
             })
 
       setCredit(Number(result.credit || credit))
+
       const [walletHistory, withdrawHistory] = await Promise.all([
         getWalletReport(session.userId),
         getWithdrawHistory(session.userId),
       ])
       setWalletRows(walletHistory)
       setWithdrawRows(withdrawHistory)
+
       setDialog({
         open: true,
         type: 'success',
@@ -173,22 +196,12 @@ function WalletPage({ navigate }) {
 
   return (
     <div className="wallet-page">
-      <header className="wallet-topbar">
-        <button type="button" className="wallet-icon-btn" onClick={() => setDrawerOpen(true)}>
-          ☰
-        </button>
-        <span className="wallet-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          🔔
-        </span>
-        <img src={logo} alt="POD" className="wallet-logo" />
-        <div className="wallet-balance-card">
-          <div className="wallet-coin">₹</div>
-          <div className="wallet-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <div className="win-strip">
         Win Amount :- <span>{credit}</span>
@@ -203,7 +216,7 @@ function WalletPage({ navigate }) {
             <button
               type="button"
               className={`wallet-tab ${activeTab === 'add' ? 'active' : ''}`}
-              onClick={() => navigate(ROUTE_PATHS.addPoint)}
+              onClick={() => setActiveTab('add')}
             >
               Add Point
             </button>
@@ -220,30 +233,34 @@ function WalletPage({ navigate }) {
             <span className="input-icon">🏛️</span>
             <input
               value={amount}
-              onChange={(event) => setAmount(event.target.value)}
+              onChange={(event) => setAmount(event.target.value.replace(/[^\d]/g, ''))}
               placeholder="Enter Amount"
             />
           </div>
 
           {activeTab === 'add' ? (
             <>
-              <button type="button" className="wallet-submit">
+              {/* <div className="wallet-gateway-wrap">
+                <label htmlFor="gatewayKey">Select Gateway</label>
+                <select
+                  id="gatewayKey"
+                  value={gatewayKey}
+                  onChange={(event) => setGatewayKey(event.target.value)}
+                >
+                  <option value="utr">UTR</option>
+                  <option value="online">Online</option>
+                  <option value="menual">Menual</option>
+                  <option value="payinfintech">Payinfintech</option>
+                </select>
+              </div> */}
+              <button type="button" className="wallet-submit" onClick={onAddPoints}>
                 Add Points
               </button>
-              <div className="wallet-note">
-                ⏲️ विथड्रावल डालने के 3 घंटे के अंदर आपके अकाउंट में पेमेंट आ जाएगी।
-              </div>
+              <div className="wallet-note">Use gateway and complete payment to add points.</div>
             </>
           ) : (
             <>
               <div className="bank-tabs">
-                <button
-                  type="button"
-                  className={paymentMode === 'bank' ? 'active' : ''}
-                  onClick={() => setPaymentMode('bank')}
-                >
-                  Bank
-                </button>
                 <button
                   type="button"
                   className={paymentMode === 'upi' ? 'active' : ''}
@@ -251,7 +268,15 @@ function WalletPage({ navigate }) {
                 >
                   UPI ID
                 </button>
+                <button
+                  type="button"
+                  className={paymentMode === 'bank' ? 'active' : ''}
+                  onClick={() => setPaymentMode('bank')}
+                >
+                  Bank
+                </button>
               </div>
+
               {paymentMode === 'bank' ? (
                 <>
                   <input
@@ -263,9 +288,7 @@ function WalletPage({ navigate }) {
                   <input
                     className="upi-input"
                     value={confirmAccountNumber}
-                    onChange={(event) =>
-                      setConfirmAccountNumber(event.target.value.replace(/[^\d]/g, ''))
-                    }
+                    onChange={(event) => setConfirmAccountNumber(event.target.value.replace(/[^\d]/g, ''))}
                     placeholder="Confirm Account Number"
                   />
                   <input
@@ -292,7 +315,13 @@ function WalletPage({ navigate }) {
                   />
                 </>
               )}
-              <button type="button" className="wallet-submit" onClick={handleWithdraw} disabled={withdrawing}>
+
+              <button
+                type="button"
+                className="wallet-submit"
+                onClick={handleWithdraw}
+                disabled={withdrawing}
+              >
                 {withdrawing ? 'Please wait...' : 'Withdrawal'}
               </button>
               <div className="wallet-note">⏲️ {withdrawTimeText}</div>
@@ -301,35 +330,9 @@ function WalletPage({ navigate }) {
         </section>
 
         <section className="history-card">
-          <h3>{activeTab === 'add' ? 'Wallet History' : 'Withdraw History'}</h3>
+          <h3>{activeTab === 'withdraw' ? 'Withdraw History' : 'Wallet History'}</h3>
           <div className="history-table-wrap">
-            {activeTab === 'add' ? (
-              <table>
-                <thead>
-                  <tr>
-                    <th>Sr No</th>
-                    <th>Pay Mode</th>
-                    <th>Date</th>
-                    <th>Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {walletRows.map((row, index) => (
-                    <tr key={row.transaction_id || `${row.datetime || 'dt'}-${index}`}>
-                      <td>{index + 1}</td>
-                      <td>{row.market ? `${row.remark || '--'} ${row.market}` : row.remark || '--'}</td>
-                      <td>{row.datetime || '--'}</td>
-                      <td>{row.amount ?? '--'}</td>
-                    </tr>
-                  ))}
-                  {walletRows.length === 0 ? (
-                    <tr>
-                      <td colSpan={4}>No wallet history found.</td>
-                    </tr>
-                  ) : null}
-                </tbody>
-              </table>
-            ) : (
+            {activeTab === 'withdraw' ? (
               <table>
                 <thead>
                   <tr>
@@ -353,6 +356,32 @@ function WalletPage({ navigate }) {
                   {withdrawRows.length === 0 ? (
                     <tr>
                       <td colSpan={5}>No withdraw history found.</td>
+                    </tr>
+                  ) : null}
+                </tbody>
+              </table>
+            ) : (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sr No</th>
+                    <th>Pay Mode</th>
+                    <th>Date</th>
+                    <th>Points</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {walletRows.map((row, index) => (
+                    <tr key={row.transaction_id || `${row.datetime || 'dt'}-${index}`}>
+                      <td>{index + 1}</td>
+                      <td>{row.market ? `${row.remark || '--'} ${row.market}` : row.remark || '--'}</td>
+                      <td>{row.datetime || '--'}</td>
+                      <td>{row.amount ?? '--'}</td>
+                    </tr>
+                  ))}
+                  {walletRows.length === 0 ? (
+                    <tr>
+                      <td colSpan={4}>No wallet history found.</td>
                     </tr>
                   ) : null}
                 </tbody>

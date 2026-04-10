@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Card, CardContent } from '@mui/material'
-import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getMarketList } from '../../services/playService'
 import { getUserCredit } from '../../services/homeService'
 import { getSession } from '../../services/sessionService'
 import SideDrawer from '../common/SideDrawer'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './play.css'
 
 function PlayPage({ navigate }) {
@@ -55,22 +55,12 @@ function PlayPage({ navigate }) {
 
   return (
     <div className="play-page">
-      <header className="play-topbar">
-        <button type="button" className="play-icon-btn" onClick={() => setDrawerOpen(true)}>
-          <AppIcon name="menu" />
-        </button>
-        <button type="button" className="play-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          <AppIcon name="notifications" />
-        </button>
-        <img src={logo} alt="POD" className="play-logo" />
-        <div className="play-balance-card">
-          <div className="play-coin">₹</div>
-          <div className="play-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <main className="play-content">
         <h2 className="all-games-title">All Games</h2>

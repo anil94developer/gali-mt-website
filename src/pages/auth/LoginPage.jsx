@@ -1,19 +1,27 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AuthLayout from './AuthLayout'
+import { getHelpNumber } from '../../services/homeService'
 import { loginUser } from '../../services/authService'
 import { ROUTE_PATHS } from '../routes'
 import './auth.css'
 
 const initialLoginForm = { mobileNum: '', pss: '' }
-const APK_DOWNLOAD_URL =
-  'https://24x7good.com/apk/gd-matka.apk'
-const HELPLINE_NUMBER = '+91 9257191421'
+const APK_DOWNLOAD_URL ='https://24x7good.com/apk/7-Star-Matka.apk'
 
 function LoginPage({ navigate }) {
   const [form, setForm] = useState(initialLoginForm)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState({ type: '', text: '' })
   const [session, setSession] = useState(null)
+  const [helplineNumber, setHelplineNumber] = useState('')
+
+  useEffect(() => {
+    getHelpNumber()
+      .then((result) => {
+        setHelplineNumber(result?.help_line_number || result?.whatsapp || '')
+      })
+      .catch(() => {})
+  }, [])
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -84,34 +92,33 @@ function LoginPage({ navigate }) {
             Signup Here
           </button>
         </p>
-
-        <div className="install-row">
+        <div className="install-center">
           <button
             type="button"
             className="install-btn"
             onClick={() => window.open(APK_DOWNLOAD_URL, '_blank')}
           >
-            Install Application 1
-          </button>
-          <button
-            type="button"
-            className="install-btn"
-            onClick={() => window.open(APK_DOWNLOAD_URL, '_blank')}
-          >
-            Install Application 2
+            <span className="apk-icon" aria-hidden="true">
+              ⬇️
+            </span>
+            <span>Install Application</span>
           </button>
         </div>
 
         <p className="helpline">
           Helpline Number:{' '}
-          <a
-            href={`https://wa.me/${HELPLINE_NUMBER.replace(/[^\d]/g, '')}`}
-            target="_blank"
-            rel="noreferrer"
-            className="helpline-link"
-          >
-            <span className="wa-icon">🟢</span> {HELPLINE_NUMBER}
-          </a>
+          {helplineNumber ? (
+            <a
+              href={`https://wa.me/${helplineNumber.replace(/[^\d]/g, '')}`}
+              target="_blank"
+              rel="noreferrer"
+              className="helpline-link"
+            >
+              <span className="wa-icon">🟢</span> {helplineNumber}
+            </a>
+          ) : (
+            <span>--</span>
+          )}
         </p>
       </form>
 

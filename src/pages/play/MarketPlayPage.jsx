@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react'
-import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getSession } from '../../services/sessionService'
 import { placeBet } from '../../services/playService'
@@ -7,6 +6,7 @@ import { getUserCredit } from '../../services/homeService'
 import SideDrawer from '../common/SideDrawer'
 import MessageDialog from '../common/MessageDialog'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './marketPlay.css'
 
 const jodiNumbers = Array.from({ length: 100 }, (_, index) => String(index).padStart(2, '0'))
@@ -214,22 +214,12 @@ function MarketPlayPage({ navigate }) {
 
   return (
     <div className="market-play-page">
-      <header className="market-topbar">
-        <button type="button" className="market-icon-btn" onClick={() => setDrawerOpen(true)}>
-          <AppIcon name="menu" />
-        </button>
-        <button type="button" className="market-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          <AppIcon name="notifications" />
-        </button>
-        <img src={logo} alt="POD" className="market-logo" />
-        <div className="market-balance-card">
-          <div className="market-coin">₹</div>
-          <div className="market-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <div className="market-header-row">
         <button type="button" className="back-btn" onClick={() => navigate(ROUTE_PATHS.play)}>

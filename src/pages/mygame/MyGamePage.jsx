@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react'
-import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getMarketList } from '../../services/playService'
 import { getUserCredit } from '../../services/homeService'
@@ -7,6 +6,7 @@ import { getSession } from '../../services/sessionService'
 import { getPendingBetHistory } from '../../services/historyService'
 import SideDrawer from '../common/SideDrawer'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './mygame.css'
 
 function MyGamePage({ navigate, pageTitle = 'History', initialTab = 'pending' }) {
@@ -76,22 +76,12 @@ function MyGamePage({ navigate, pageTitle = 'History', initialTab = 'pending' })
 
   return (
     <div className="history-page">
-      <header className="history-topbar">
-        <button type="button" className="history-icon-btn" onClick={() => setDrawerOpen(true)}>
-          <AppIcon name="menu" />
-        </button>
-        <button type="button" className="history-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          <AppIcon name="notifications" />
-        </button>
-        <img src={logo} alt="POD" className="history-logo" />
-        <div className="history-balance-card">
-          <div className="history-coin">₹</div>
-          <div className="history-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <div className="history-title">{pageTitle}</div>
 

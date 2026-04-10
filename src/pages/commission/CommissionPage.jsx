@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getSession } from '../../services/sessionService'
 import { getUserCredit } from '../../services/homeService'
 import { getManageCommission } from '../../services/commissionService'
 import SideDrawer from '../common/SideDrawer'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './commission.css'
 
 function CommissionPage({ navigate }) {
@@ -46,22 +46,12 @@ function CommissionPage({ navigate }) {
 
   return (
     <div className="commission-page">
-      <header className="commission-topbar">
-        <button type="button" className="commission-icon-btn" onClick={() => setDrawerOpen(true)}>
-          ☰
-        </button>
-        <span className="commission-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          🔔
-        </span>
-        <img src={logo} alt="POD" className="commission-logo" />
-        <div className="commission-balance-card">
-          <div className="commission-coin">₹</div>
-          <div className="commission-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <main className="commission-content">
         <h2 className="commission-title">Commission List</h2>

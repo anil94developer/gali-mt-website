@@ -27,6 +27,8 @@ const iconPaths = {
     'M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z',
   notifications:
     'M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zm7-6V11a7 7 0 1 0-14 0v5L3 18v1h18v-1l-2-2z',
+  close:
+    'M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.4 4.29 19.71 2.88 18.3 9.17 12 2.88 5.71 4.29 4.29l6.3 6.3 6.29-6.3z',
 }
 
 function AppIcon({ name, className = '' }) {

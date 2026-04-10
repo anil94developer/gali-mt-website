@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getAppNotice, getUserCredit } from '../../services/homeService'
 import { getSession } from '../../services/sessionService'
 import SideDrawer from '../common/SideDrawer'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './notification.css'
 
 function formatNoticeTime(value) {
@@ -54,20 +54,12 @@ function NotificationPage({ navigate }) {
 
   return (
     <div className="notification-page">
-      <header className="notification-topbar">
-        <button type="button" className="notification-icon-btn" onClick={() => setDrawerOpen(true)}>
-          ☰
-        </button>
-        <span className="notification-bell">🔔</span>
-        <img src={logo} alt="POD" className="notification-logo" />
-        <div className="notification-balance-card">
-          <div className="notification-coin">₹</div>
-          <div className="notification-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <main className="notification-content">
         {loading ? <p className="state-text">Loading notification...</p> : null}

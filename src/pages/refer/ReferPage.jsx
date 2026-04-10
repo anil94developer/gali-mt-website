@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getSession } from '../../services/sessionService'
 import { getUserCredit } from '../../services/homeService'
 import { getReferList } from '../../services/referService'
 import SideDrawer from '../common/SideDrawer'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './refer.css'
 
 function ReferPage({ navigate }) {
@@ -46,22 +46,12 @@ function ReferPage({ navigate }) {
 
   return (
     <div className="refer-page">
-      <header className="refer-topbar">
-        <button type="button" className="refer-icon-btn" onClick={() => setDrawerOpen(true)}>
-          ☰
-        </button>
-        <span className="refer-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          🔔
-        </span>
-        <img src={logo} alt="POD" className="refer-logo" />
-        <div className="refer-balance-card">
-          <div className="refer-coin">₹</div>
-          <div className="refer-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <main className="refer-content">
         <h2 className="refer-title">My Refer List</h2>

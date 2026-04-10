@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Card, CardContent } from '@mui/material'
-import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getAppNotice, getHelpNumber, getHomeDashboard, getUserCredit, getUserProfile } from '../../services/homeService'
 import { getSession } from '../../services/sessionService'
 import SideDrawer from '../common/SideDrawer'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './home.css'
 
 function HomePage({ navigate }) {
@@ -54,8 +54,8 @@ function HomePage({ navigate }) {
   }, [navigate, session?.userId])
 
   const helpNumber = useMemo(
-    () => profile?.genral_setting_whatsapp || help?.help_line_number || '+91 9257191421',
-    [help?.help_line_number, profile?.genral_setting_whatsapp]
+    () => profile?.genral_setting_whatsapp || help?.help_line_number || help?.whatsapp || '',
+    [help?.help_line_number, help?.whatsapp, profile?.genral_setting_whatsapp]
   )
   const todayText = useMemo(() => {
     const today = new Date()
@@ -69,22 +69,12 @@ function HomePage({ navigate }) {
 
   return (
     <div className="home-page">
-      <header className="home-topbar">
-        <button className="menu-btn" type="button" onClick={() => setDrawerOpen(true)}>
-          <AppIcon name="menu" />
-        </button>
-        <button className="home-bell-btn" type="button" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          <AppIcon name="notifications" />
-        </button>
-        <img src={logo} alt="POD" className="top-logo" />
-        <div className="balance-card">
-          <div className="coin">₹</div>
-          <div className="balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <main className="home-content">
         {loading ? <p className="state-text">Loading home data...</p> : null}

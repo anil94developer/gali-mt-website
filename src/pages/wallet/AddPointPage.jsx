@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import logo from '../../assets/hero.png'
 import { ROUTE_PATHS } from '../routes'
 import { getSession } from '../../services/sessionService'
 import { getAppManager, getWalletReport } from '../../services/walletService'
@@ -8,6 +7,7 @@ import SideDrawer from '../common/SideDrawer'
 import MessageDialog from '../common/MessageDialog'
 import { APP_CONFIG } from '../../config/config'
 import AppIcon from '../common/AppIcon'
+import Header from '../common/Header'
 import './addPoint.css'
 
 function AddPointPage({ navigate }) {
@@ -72,22 +72,12 @@ function AddPointPage({ navigate }) {
 
   return (
     <div className="add-point-page">
-      <header className="addp-topbar">
-        <button type="button" className="addp-icon-btn" onClick={() => setDrawerOpen(true)}>
-          ☰
-        </button>
-        <span className="addp-bell" onClick={() => navigate(ROUTE_PATHS.notification)}>
-          🔔
-        </span>
-        <img src={logo} alt="POD" className="addp-logo" />
-        <div className="addp-balance-card">
-          <div className="addp-coin">₹</div>
-          <div className="addp-balance-text">
-            <small>Balance</small>
-            <strong>{credit}/-</strong>
-          </div>
-        </div>
-      </header>
+      <Header
+        credit={credit}
+        isMenuOpen={drawerOpen}
+        onMenu={() => setDrawerOpen((prev) => !prev)}
+        onNotification={() => navigate(ROUTE_PATHS.notification)}
+      />
 
       <div className="addp-win-strip">
         Win Amount :- <span>{credit}</span>
