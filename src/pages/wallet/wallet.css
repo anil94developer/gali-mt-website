@@ -170,6 +170,42 @@
   background: linear-gradient(90deg, #2f80ed, #0b5ed7);
 }
 
+.wallet-pay-options {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.wallet-pay-app {
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.wallet-pay-app.phonepe {
+  background: #5f259f;
+}
+
+.wallet-pay-app.paytm {
+  background: #00baf2;
+}
+
+.wallet-pay-app.bhim {
+  background: #f47b20;
+}
+
+.wallet-pay-app.browser {
+  background: #0b5ed7;
+}
+
+.wallet-pay-app:disabled {
+  opacity: 0.45;
+}
+
 .wallet-gateway-wrap {
   margin-top: 8px;
 }
@@ -322,6 +358,11 @@
 
   .wallet-note {
     font-size: 11px;
+  }
+
+  .wallet-pay-app {
+    height: 38px;
+    font-size: 12px;
   }
 
   .wallet-gateway-wrap select {

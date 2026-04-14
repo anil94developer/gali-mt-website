@@ -1,5 +1,5 @@
 export const APP_CONFIG = {
-  baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://loaclhost:30000/api/users',
+  baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:30001/api/users',
   appId: import.meta.env.VITE_APP_ID || 'com.dubaiking',
   devId: import.meta.env.VITE_DEV_ID || 'undefined',
   paymentGatewayUrl:
@@ -27,4 +27,6 @@ export const API_ENDPOINTS = {
   helpNumber: '/POM_help_number',
   walletReport: '/wallet-report',
   withdrawHistory: '/withdrawl-history',
+  resultLinks: '/result-links',
+  allGameResultsByMonth: '/all-game-results-by-month',
 }

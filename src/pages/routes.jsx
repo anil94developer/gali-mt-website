@@ -76,7 +76,6 @@ export function getRouteElement(pathname, navigate) {
       normalizedPath === ROUTE_PATHS.profile ||
       normalizedPath === ROUTE_PATHS.commission ||
       normalizedPath === ROUTE_PATHS.history ||
-      normalizedPath === ROUTE_PATHS.resultHistory ||
       normalizedPath === ROUTE_PATHS.terms ||
       normalizedPath === ROUTE_PATHS.refer ||
       normalizedPath === ROUTE_PATHS.referShare ||

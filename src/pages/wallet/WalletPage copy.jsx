@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { APP_CONFIG } from '../../config/config'
 import { ROUTE_PATHS } from '../routes'
 import { getUserCredit } from '../../services/homeService'
@@ -17,7 +17,6 @@ import Header from '../common/Header'
 import './wallet.css'
 
 function WalletPage({ navigate }) {
-  const IMB_PENDING_ORDER_KEY = 'imb_pending_order_id'
   const [session] = useState(() => getSession())
   const [activeTab, setActiveTab] = useState('add')
   const [amount, setAmount] = useState('')
@@ -37,15 +36,8 @@ function WalletPage({ navigate }) {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [withdrawing, setWithdrawing] = useState(false)
   const [addingPoints, setAddingPoints] = useState(false)
-  const [checkingOrderStatus, setCheckingOrderStatus] = useState(false)
+  const [checkingOrder, setCheckingOrder] = useState(false)
   const [lastOrderId, setLastOrderId] = useState('')
-  const [paymentLinks, setPaymentLinks] = useState({
-    phonepe: '',
-    paytm: '',
-    bhim: '',
-    browser: '',
-  })
-  const lastAutoCheckedOrderRef = useRef('')
   const [dialog, setDialog] = useState({ open: false, type: 'success', title: '', message: '' })
 
   useEffect(() => {
@@ -58,42 +50,19 @@ function WalletPage({ navigate }) {
       setLoading(true)
       setError('')
       try {
-        const [managerResult, creditResult, walletResult, withdrawResult] = await Promise.allSettled([
+        const [managerResponse, creditValue, walletHistory, withdrawHistory] = await Promise.all([
           getAppManager(session.userId),
           getUserCredit(session.userId),
           getWalletReport(session.userId),
           getWithdrawHistory(session.userId),
         ])
 
-        if (managerResult.status === 'fulfilled') {
-          setManagerData(managerResult.value?.data || managerResult.value || null)
-        } else {
-          setManagerData(null)
-        }
-
-        if (creditResult.status === 'fulfilled') {
-          setCredit(Number(creditResult.value || 0))
-        }
-
-        if (walletResult.status === 'fulfilled') {
-          setWalletRows(walletResult.value)
-        } else {
-          setWalletRows([])
-        }
-
-        if (withdrawResult.status === 'fulfilled') {
-          setWithdrawRows(withdrawResult.value)
-        } else {
-          setWithdrawRows([])
-        }
-
-        const failed = [managerResult, creditResult, walletResult, withdrawResult].filter(
-          (result) => result.status === 'rejected'
-        ).length
-
-        if (failed > 0) {
-          // setError('Some wallet data could not be loaded. Please refresh.')
-        }
+        setManagerData(managerResponse?.data || null)
+        setCredit(Number(creditValue || 0))
+        setWalletRows(walletHistory)
+        setWithdrawRows(withdrawHistory)
+      } catch (apiError) {
+        setError(apiError instanceof Error ? apiError.message : 'Unable to fetch wallet details.')
       } finally {
         setLoading(false)
       }
@@ -102,106 +71,32 @@ function WalletPage({ navigate }) {
     loadData()
   }, [navigate, session?.userId])
 
-   
-  useEffect(() => {
-     let envt= setInterval(() => {
-      lastOrderId &&  onCheckOrderStatus()
-     }, 3000)
-     return () => clearInterval(envt) 
-  }, [lastOrderId])
-
-
-
-  const appController = managerData?.appController || managerData || {}
-  const gatewayFromApi = String(managerData?.gateway?.name || managerData?.gateway?.slug || '').toLowerCase()
-
   const withdrawTimeText = useMemo(() => {
-    const open = appController?.withdraw_open_time || '07:00'
-    const close = appController?.withdraw_close_time || '13:30'
+    const open = managerData?.withdraw_open_time || '07:00'
+    const close = managerData?.withdraw_close_time || '13:30'
     return `Withdrawal Time ${open} to ${close}`
-  }, [appController?.withdraw_close_time, appController?.withdraw_open_time])
-
-  const isWithdrawTimeOpen = () => {
-    const open = String(appController?.withdraw_open_time || '07:00')
-    const close = String(appController?.withdraw_close_time || '13:30')
-    const parseMinutes = (value) => {
-      const [h, m] = value.split(':').map((part) => Number(part))
-      if (Number.isNaN(h) || Number.isNaN(m)) return null
-      return h * 60 + m
-    }
-
-    const openMin = parseMinutes(open)
-    const closeMin = parseMinutes(close)
-    if (openMin === null || closeMin === null) return true
-
-    const now = new Date()
-    const nowMin = now.getHours() * 60 + now.getMinutes()
-
-    // Support windows that cross midnight as well.
-    if (openMin <= closeMin) {
-      return nowMin >= openMin && nowMin <= closeMin
-    }
-    return nowMin >= openMin || nowMin <= closeMin
-  }
-
-  const depositDisabled =
-    String(appController?.deposit_disable || '0') === '0'
-  const withdrawDisabled =
-    String(appController?.withdraw_disable || '0') === '0'
-  const minDeposit = Number(appController?.min_deposit ?? appController?.minDeposit ?? 0)
-  const maxDeposit = Number(appController?.max_deposit ?? appController?.maxDeposit ?? 0)
-  const minRedeem = Number(appController?.min_redeem ?? appController?.minRedeem ?? 0)
+  }, [managerData?.withdraw_close_time, managerData?.withdraw_open_time])
 
   const onAddPoints = async () => {
-    if (depositDisabled) {
-      setDialog({
-        open: true,
-        type: 'error',
-        title: 'Deposit Disabled',
-        message: 'Online deposit is currently disabled by admin.',
-      })
-      return
-    }
-
     if (!amount || Number(amount) <= 0) {
       setDialog({
         open: true,
         type: 'error',
         title: 'Error',
-        message: 'Please enter valid amount.',
+        message: 'Please enter valid amount.11',
       })
       return
     }
 
-    const numericAmount = Number(amount)
-    if (minDeposit > 0 && numericAmount < minDeposit) {
-      setDialog({
-        open: true,
-        type: 'error',
-        title: 'Invalid Amount',
-        message: `Minimum deposit is ${minDeposit}.`,
-      })
-      return
-    }
-    if (maxDeposit > 0 && numericAmount > maxDeposit) {
-      setDialog({
-        open: true,
-        type: 'error',
-        title: 'Invalid Amount',
-        message: `Maximum deposit is ${maxDeposit}.`,
-      })
-      return
-    }
-
-    const selectedGateway = gatewayFromApi || gatewayKey || 'utr'
-    if (selectedGateway === 'imb') {
+    // if (gatewayKey === 'imb') {
       setAddingPoints(true)
       try {
         const generatedOrderId = `${String(session?.userId || '')}${Date.now()}`
         const payload = {
           user_id: String(session?.userId || ''),
           app_id: APP_CONFIG.appId,
-          amount: numericAmount,
+          amount: Number(amount),
+          user_token: '7a7163ad52cc616002758a1e408a4a3b',
           customer_mobile: String(session?.mobileNum || ''),
           order_id: generatedOrderId,
           redirect_url:
@@ -227,35 +122,16 @@ function WalletPage({ navigate }) {
 
         const finalOrderId = String(data?.order_id || generatedOrderId)
         setLastOrderId(finalOrderId)
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem(IMB_PENDING_ORDER_KEY, finalOrderId)
-        }
 
-        const resultData = data?.result || data?.data || {}
         const paymentUrl =
-          resultData?.payment_url ||
           data?.payment_url ||
-          resultData?.payment_link ||
           data?.payment_link ||
-          data?.url
-        const paytmLink = resultData?.paytm_link || data?.paytm_link || ''
-        const bhimLink = resultData?.bhim_link || data?.bhim_link || ''
-        const phonepeLink = resultData?.phonepe_link || data?.phonepe_link || bhimLink
+          data?.url ||
+          data?.data?.payment_url ||
+          data?.data?.payment_link
 
-        setPaymentLinks({
-          phonepe: String(phonepeLink || ''),
-          paytm: String(paytmLink || ''),
-          bhim: String(bhimLink || ''),
-          browser: String(paymentUrl || ''),
-        })
-
-        if (paytmLink || bhimLink || phonepeLink || paymentUrl) {
-          // setDialog({
-          //   open: true,
-          //   type: 'success',
-          //   title: 'Payment Options',
-          //   message: 'Select app and pay now.',
-          // })
+        if (paymentUrl) {
+          window.location.href = paymentUrl
           return
         }
 
@@ -275,29 +151,36 @@ function WalletPage({ navigate }) {
       } finally {
         setAddingPoints(false)
       }
-
-    } else {
-      const name = encodeURIComponent(session?.name || 'Test')
-      const userid = encodeURIComponent(String(session?.userId || ''))
-      const contact = encodeURIComponent(session?.mobileNum || '')
-      const finalAmount = encodeURIComponent(String(amount))
-
-      const url = `${APP_CONFIG.paymentGatewayUrl}?name=${name}&userid=${userid}&amount=${finalAmount}&contact=${contact}&getaway=${selectedGateway}`
-      window.location.href = url
-    }
+    // } else {
+    //   const name = encodeURIComponent(session?.name || 'Test')
+    //   const userid = encodeURIComponent(String(session?.userId || ''))
+    //   const contact = encodeURIComponent(session?.mobileNum || '')
+    //   const finalAmount = encodeURIComponent(String(amount))
+    //   const getaway = gatewayKey
+    //   const url = `${APP_CONFIG.paymentGatewayUrl}?name=${name}&userid=${userid}&amount=${finalAmount}&contact=${contact}&getaway=${getaway}`
+    //   window.location.href = url
+    // }
   }
 
-  const onCheckOrderStatus = async (customOrderId = '', isAuto = false) => {
-    const orderIdToCheck = String(customOrderId || lastOrderId || '')
-    if (!orderIdToCheck) return
+  const onCheckImbStatus = async () => {
+    if (!lastOrderId) {
+      setDialog({
+        open: true,
+        type: 'error',
+        title: 'Error',
+        message: 'No IMB order found. Please create order first.',
+      })
+      return
+    }
 
-    setCheckingOrderStatus(true)
+    setCheckingOrder(true)
     try {
       const response = await fetch(`${APP_CONFIG.baseUrl}/imb-check-order-status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          order_id: orderIdToCheck,
+          order_id: String(lastOrderId),
+          user_token: '2048f66bef68633fa3262d7a398ab577',
           devName: 'WEB',
           devType: 'web',
           devId: 'BROWSER-1',
@@ -310,87 +193,31 @@ function WalletPage({ navigate }) {
       }
 
       const statusValue = data?.status || data?.data?.order_status || 'Unknown'
-      const successStatuses = ['SUCCESS', 'PAID', 'COMPLETED']
-      if (successStatuses.includes(String(statusValue).toUpperCase())) {
-        if (typeof window !== 'undefined') {
-          window.localStorage.removeItem(IMB_PENDING_ORDER_KEY)
-        }
-        setLastOrderId('')
-        setPaymentLinks({ phonepe: '', paytm: '', bhim: '', browser: '' })
-        // page reload after 3 seconds
-        setTimeout(() => {
-          window.location.reload()
-        }, 1000)
-      }
-
-      if (!isAuto || successStatuses.includes(String(statusValue).toUpperCase())) {
-        // setDialog({
-        //   open: true,
-        //   type: 'success',
-        //   title: 'Order Status',
-        //   message: `${data?.message || 'Status fetched'} (${statusValue})`,
-        // })
-      }
+      setDialog({
+        open: true,
+        type: 'success',
+        title: 'Order Status',
+        message: `${data?.message || 'Status fetched'} (${statusValue})`,
+      })
     } catch (apiError) {
-      if (!isAuto) {
-        // setDialog({
-        //   open: true,
-        //   type: 'error',
-        //   title: 'Error',
-        //   message: apiError instanceof Error ? apiError.message : 'Unable to check IMB status.',
-        // })
-      }
+      setDialog({
+        open: true,
+        type: 'error',
+        title: 'Error',
+        message: apiError instanceof Error ? apiError.message : 'Unable to check IMB status.',
+      })
     } finally {
-      setCheckingOrderStatus(false)
+      setCheckingOrder(false)
     }
   }
-
-  const openPaymentLink = (link, useBrowser = false) => {
-    if (!link) return
-    if (useBrowser) {
-      window.open(link, '_blank', 'noopener,noreferrer')
-      return
-    }
-    window.location.href = link
-  }
-
 
   const handleWithdraw = async () => {
-    if (withdrawDisabled) {
-      setDialog({
-        open: true,
-        type: 'error',
-        title: 'Withdraw Disabled',
-        message: 'Withdrawal is currently disabled by admin.',
-      })
-      return
-    }
-
-    if (!isWithdrawTimeOpen()) {
-      setDialog({
-        open: true,
-        type: 'error',
-        title: 'Withdraw Closed',
-        message: withdrawTimeText,
-      })
-      return
-    }
-
     if (!amount || Number(amount) <= 0) {
       setDialog({
         open: true,
         type: 'error',
         title: 'Error',
         message: 'Please enter valid amount.',
-      })
-      return
-    }
-    if (minRedeem > 0 && Number(amount) < minRedeem) {
-      setDialog({
-        open: true,
-        type: 'error',
-        title: 'Invalid Amount',
-        message: `Minimum redeem required is ${minRedeem}.`,
       })
       return
     }
@@ -440,19 +267,19 @@ function WalletPage({ navigate }) {
       const result =
         paymentMode === 'upi'
           ? await deductWithdrawUpiWeb({
-            userId: session.userId,
-            amount,
-            upiId,
-          })
+              userId: session.userId,
+              amount,
+              upiId,
+            })
           : await deductWithdrawWeb({
-            userId: session.userId,
-            amount,
-            accountNumber,
-            ifscCode,
-            bankName: '',
-            accountHolderName: '',
-            upiId: '',
-          })
+              userId: session.userId,
+              amount,
+              accountNumber,
+              ifscCode,
+              bankName: '',
+              accountHolderName: '',
+              upiId: '',
+            })
 
       setCredit(Number(result.credit || credit))
 
@@ -530,7 +357,7 @@ function WalletPage({ navigate }) {
 
           {activeTab === 'add' ? (
             <>
-              {/* <div className="wallet-gateway-wrap">
+              <div className="wallet-gateway-wrap">
                 <label htmlFor="gatewayKey">Select Gateway</label>
                 <select
                   id="gatewayKey"
@@ -543,61 +370,21 @@ function WalletPage({ navigate }) {
                   <option value="payinfintech">Payinfintech</option>
                   <option value="imb">IMB</option>
                 </select>
-              </div> */}
-              <button
-                type="button"
-                className="wallet-submit"
-                onClick={onAddPoints}
-                disabled={addingPoints || depositDisabled}
-              >
+              </div>
+              <button type="button" className="wallet-submit" onClick={onAddPoints} disabled={addingPoints}>
                 {addingPoints ? 'Please wait...' : 'Add Points'}
               </button>
-
-              {paymentLinks.phonepe || paymentLinks.paytm || paymentLinks.bhim || paymentLinks.browser ? (
-                <div className="wallet-pay-options">
-                  {/* <button
-                    type="button"
-                    className="wallet-pay-app phonepe"
-                    onClick={() => openPaymentLink(paymentLinks.phonepe)}
-                    disabled={!paymentLinks.phonepe}
-                  >
-                    PhonePe
-                  </button>
-                  <button
-                    type="button"
-                    className="wallet-pay-app paytm"
-                    onClick={() => openPaymentLink(paymentLinks.paytm)}
-                    disabled={!paymentLinks.paytm}
-                  >
-                    Paytm
-                  </button> */}
-                  <button
-                    type="button"
-                    className="wallet-pay-app bhim"
-                    onClick={() => openPaymentLink(paymentLinks.bhim)}
-                    disabled={!paymentLinks.bhim}
-                  >
-                    BHIM
-                  </button>
-                  <button
-                    type="button"
-                    className="wallet-pay-app browser"
-                    onClick={() => openPaymentLink(paymentLinks.browser, true)}
-                    disabled={!paymentLinks.browser}
-                  >
-                    Other
-                  </button>
-                </div>
+              {gatewayKey === 'imb' ? (
+                <button
+                  type="button"
+                  className="wallet-submit"
+                  onClick={onCheckImbStatus}
+                  disabled={checkingOrder || !lastOrderId}
+                >
+                  {checkingOrder ? 'Checking...' : 'Check Status'}
+                </button>
               ) : null}
-          
-              {lastOrderId ? <div className="wallet-note">Order ID: {lastOrderId}</div> : null}  
-              {depositDisabled ? <div className="wallet-note">Deposit is disabled by admin.</div> : null}
-              {!depositDisabled && minDeposit > 0 ? (
-                <div className="wallet-note">
-                  Deposit Limit: Min {minDeposit}
-                  {maxDeposit > 0 ? ` / Max ${maxDeposit}` : ''}
-                </div>
-              ) : null}
+              {lastOrderId ? <div className="wallet-note">Order ID: {lastOrderId}</div> : null}
               <div className="wallet-note">Use gateway and complete payment to add points.</div>
             </>
           ) : (
@@ -653,7 +440,7 @@ function WalletPage({ navigate }) {
                     className="upi-input"
                     value={upiId}
                     onChange={(event) => setUpiId(event.target.value)}
-                    placeholder={appController?.upiId || 'UPI ID'}
+                    placeholder={managerData?.upiId || 'UPI ID'}
                   />
                 </>
               )}
@@ -662,14 +449,10 @@ function WalletPage({ navigate }) {
                 type="button"
                 className="wallet-submit"
                 onClick={handleWithdraw}
-                disabled={withdrawing || withdrawDisabled}
+                disabled={withdrawing}
               >
                 {withdrawing ? 'Please wait...' : 'Withdrawal'}
               </button>
-              {withdrawDisabled ? <div className="wallet-note">Withdraw is disabled by admin.</div> : null}
-              {!withdrawDisabled && minRedeem > 0 ? (
-                <div className="wallet-note">Minimum Redeem: {minRedeem}</div>
-              ) : null}
               <div className="wallet-note">⏲️ {withdrawTimeText}</div>
             </>
           )}
